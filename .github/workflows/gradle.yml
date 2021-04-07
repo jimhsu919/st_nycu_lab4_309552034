@@ -10,7 +10,7 @@ on:
     branches: [ main ]
 
 jobs:
-  compile:
+  Compile:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,8 @@ jobs:
         name: my-artifact
         path: build
 
-  test:
-    needs: [compile]
+  Test:
+    needs: [Compile]
     runs-on: ubuntu-latest
 
     steps:
@@ -50,8 +50,8 @@ jobs:
         path: build/reports
 
 
-  assemble:
-    needs: [test]
+  Assemble:
+    needs: [Test]
     runs-on: ubuntu-latest
 
     steps:
@@ -67,6 +67,27 @@ jobs:
     - run: ./gradlew assemble
     - uses: actions/upload-artifact@v2
       with:
+        name: my-artifact
+        path: build
+    - uses: actions/upload-artifact@v2
+      with:
         name: buildJar
         path: build/libs/st_nycu_lab4_309552034-1.0-SNAPSHOT.jar
 
+  Release:
+    needs: [Assemble]
+    on:
+      push:
+        tags: '*'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+          path: build
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/st_nycu_lab4_309552034-1.0-SNAPSHOT.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
