@@ -44,6 +44,10 @@ jobs:
       with:
         name: my-artifact
         path: build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: testReport
+        path: build/reports
 
 
   assemble:
@@ -63,23 +67,6 @@ jobs:
     - run: ./gradlew assemble
     - uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: build
-
-  release:
-    needs: [assemble]
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: my-artifact
-        path: build
-    - uses: actions/upload-artifact@v2
-      with:
-        name: testReport
-        path: build/reports
-    - uses: actions/upload-artifact@v2
-      with:
         name: buildJar
         path: build/libs/st_nycu_lab4_309552034-1.0-SNAPSHOT.jar
+
