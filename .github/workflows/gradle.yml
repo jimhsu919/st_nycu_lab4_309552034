@@ -67,7 +67,7 @@ jobs:
         path: build
 
   release:
-    need: [assemble]
+    needs: [assemble]
 
     steps:
     - uses: actions/download-artifact@v2
