@@ -15,6 +15,15 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - run: chmod +x gradlew
     - run: ./gradlew compileJAVA
     - uses: actions/upload-artifact@v2
@@ -31,6 +40,15 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - uses: actions/download-artifact@v2
       with:
         name: my-artifact
@@ -56,23 +74,21 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - uses: actions/download-artifact@v2
       with:
         name: my-artifact
         path: build
 
-    - name: cache build
-      id: cache-build
-      uses: actions/cache@v2
-      with:
-        path: build
-        key: ${{ runner.os }}-build
-
     - run: chmod +x gradlew
-    - name: test cache
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: ./gradlew build
-
     - run: ./gradlew assemble
     - uses: actions/upload-artifact@v2
       with:
