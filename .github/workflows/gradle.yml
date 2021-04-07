@@ -47,7 +47,7 @@ jobs:
 
 
   assemble:
-    needs: test
+    needs: [test]
     runs-on: ubuntu-latest
 
     steps:
@@ -67,7 +67,7 @@ jobs:
         path: build
 
   release:
-    need: assemble
+    need: [assemble]
 
     steps:
     - uses: actions/download-artifact@v2
